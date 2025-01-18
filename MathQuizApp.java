@@ -3,14 +3,11 @@ import java.util.*;
 
 public class MathQuizApp {
 
-    // Score tracking variables
     private int correctAnswers = 0;
     private int totalQuestions = 0;
 
-    // Database connection
     private Connection connection;
 
-    // Constructor to initialize database connection
     public MathQuizApp() {
         try {
             connection = DriverManager.getConnection("jdbc:sqlite:MathQuizDB.db");
@@ -34,7 +31,6 @@ public class MathQuizApp {
         }
     }
 
-    // Save score to database (without quiz_id)
     private void saveScoreToDatabase() {
         if (totalQuestions == 0) {
             System.out.println("No questions answered. Score will not be saved.");
@@ -45,9 +41,9 @@ public class MathQuizApp {
         
         try (PreparedStatement pstmt = connection.prepareStatement(insertSQL)) {
             double percentage = (totalQuestions > 0) ? (correctAnswers / (double) totalQuestions) * 100 : 0;
-            pstmt.setInt(1, totalQuestions);  // Set totalQuestions
-            pstmt.setInt(2, correctAnswers);  // Set correctAnswers
-            pstmt.setDouble(3, percentage);   // Set percentage
+            pstmt.setInt(1, totalQuestions);  
+            pstmt.setInt(2, correctAnswers);  
+            pstmt.setDouble(3, percentage);   
             pstmt.executeUpdate();
             System.out.println("Score saved successfully.");
         } catch (SQLException e) {
@@ -55,9 +51,8 @@ public class MathQuizApp {
         }
     }
 
-    // View all past scores from database
     private void viewAllScores() {
-        String querySQL = "SELECT * FROM Scores ORDER BY id DESC"; // Fetch scores ordered by primary key (id)
+        String querySQL = "SELECT * FROM Scores ORDER BY id DESC"; 
         try (PreparedStatement pstmt = connection.prepareStatement(querySQL)) {
             ResultSet rs = pstmt.executeQuery();
 
@@ -76,7 +71,6 @@ public class MathQuizApp {
         }
     }
 
-    // Main menu
     public void displayMenu() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Welcome to the Math Quiz Application!");
@@ -117,7 +111,6 @@ public class MathQuizApp {
         }
     }
 
-    // Start the quiz
     private void startQuiz() {
         Scanner scanner = new Scanner(System.in);
         Random random = new Random();
@@ -159,7 +152,6 @@ public class MathQuizApp {
         }
     }
 
-    // View score summary
     private void viewScoreSummary() {
         System.out.println("\nScore Summary:");
         System.out.println("Total Questions: " + totalQuestions);
@@ -172,14 +164,12 @@ public class MathQuizApp {
         }
     }
 
-    // Generate a random operator
     private char getRandomOperator() {
         char[] operators = {'+', '-', '*'};
         Random random = new Random();
         return operators[random.nextInt(operators.length)];
     }
 
-    // Calculate the answer based on operator
     private int calculateAnswer(int num1, int num2, char operator) {
         return switch (operator) {
             case '+' -> num1 + num2;
@@ -189,7 +179,6 @@ public class MathQuizApp {
         };
     }
 
-    // Close database connection
     private void closeDatabaseConnection() {
         try {
             if (connection != null && !connection.isClosed()) {
@@ -200,7 +189,6 @@ public class MathQuizApp {
         }
     }
 
-    // Main method
     public static void main(String[] args) {
         MathQuizApp app = new MathQuizApp();
         app.displayMenu();
